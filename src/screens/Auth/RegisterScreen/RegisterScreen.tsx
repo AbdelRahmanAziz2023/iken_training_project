@@ -1,0 +1,119 @@
+import CustomButton from "@/src/components/common/CustomButton";
+import CustomTextField from "@/src/components/common/CustomTextField";
+import { Icons } from "@/src/constants/images";
+import { useRegisterMutation } from "@/src/services/api/Endpoints/AuthEndpoints";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AuthHead from "../AuthHead";
+
+const RegisterScreen = () => {
+
+  const router = useRouter();
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [signUp, { data, isLoading, error }] = useRegisterMutation();
+
+  const handleRegister = async () => {
+    try {
+      const res = await signUp({ firstName, lastName, email, password }).unwrap();
+      
+      console.log('REGISTER SUCCESS:', res);
+      router.replace('/(app)/Home');
+    } catch (err: any) {
+      console.log('REGISTER ERROR:', err);
+    }
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+     
+      <View style={styles.iconWrapper}>
+        <Icons.authBack width="100%" height={300} />
+      </View>
+
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <AuthHead
+            title="Register"
+            description="Please sign up to get started"
+          />
+        </View>
+
+        <View style={styles.card}>
+          <CustomTextField
+            value={firstName}
+            onChangeText={setFirstName}
+            name="firstName"
+            placeholder="Enter your first name"
+          />
+          <CustomTextField
+            value={lastName}
+            onChangeText={setLastName}
+            name="lastName"
+            placeholder="Enter your last name"
+          />
+          <CustomTextField
+            value={email}
+            onChangeText={setEmail}
+            name="Email"
+            placeholder="Enter your email"
+          />
+          <CustomTextField
+            value={password}
+            onChangeText={setPassword}
+            name="Password"
+            placeholder="Enter your password"
+            isPassword
+          />
+          
+          <CustomButton
+            title="Sign Up"
+            onPress={handleRegister}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#121223',
+  },
+  iconWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: -1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  header: {
+    flex: 0.35,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  card: {
+    flex: 0.65,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 30,
+    alignItems: 'center',
+    gap: 20,
+  },
+});
+
+export default RegisterScreen;

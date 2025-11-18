@@ -2,6 +2,7 @@ import CustomButton from "@/src/components/common/CustomButton";
 import CustomTextField from "@/src/components/common/CustomTextField";
 import { Icons } from "@/src/constants/images";
 import { useRegisterMutation } from "@/src/services/api/Endpoints/AuthEndpoints";
+import { validateSignUpInput } from "@/src/utils/validation";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -13,20 +14,21 @@ const RegisterScreen = () => {
   const router = useRouter();
 
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [secondName, setSecondName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [signUp, { data, isLoading, error }] = useRegisterMutation();
+  const [signUp] = useRegisterMutation();
 
   const handleRegister = async () => {
+    if(!validateSignUpInput(firstName, secondName, email, password)) return;
     try {
-      const res = await signUp({ firstName, lastName, email, password }).unwrap();
+      const res = await signUp({ firstName, secondName, email, password }).unwrap();
       
       console.log('REGISTER SUCCESS:', res);
       router.replace('/(app)/Home');
     } catch (err: any) {
-      console.log('REGISTER ERROR:', err);
+      console.log('REGISTER ERROR: '+ err);
     }
   }
 
@@ -49,13 +51,13 @@ const RegisterScreen = () => {
           <CustomTextField
             value={firstName}
             onChangeText={setFirstName}
-            name="firstName"
+            name="First Name"
             placeholder="Enter your first name"
           />
           <CustomTextField
-            value={lastName}
-            onChangeText={setLastName}
-            name="lastName"
+            value={secondName}
+            onChangeText={setSecondName}
+            name="Second Name"
             placeholder="Enter your last name"
           />
           <CustomTextField

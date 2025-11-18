@@ -5,9 +5,10 @@ import CustomTextField from "@/src/components/common/CustomTextField";
 // import { Icons } from "@/src/constants/images";
 import { Icons } from "@/src/constants/images";
 import { useLoginMutation } from "@/src/services/api/Endpoints/AuthEndpoints";
+import { validateLogInInput } from "@/src/utils/validation";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AuthHead from "../AuthHead";
 import ForgetPasswordRow from "../ForgetPasswordRow";
@@ -18,10 +19,10 @@ const LoginScreen = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [login, { isLoading }] = useLoginMutation();
 
   const handleLogin = async () => {
+    if (!validateLogInInput(email, password)) return;
     try {
       await login({ email, password }).unwrap();
 
@@ -32,7 +33,13 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={styles.container}
+>
+
+
+    <SafeAreaView style={styles.container} >
       <View style={styles.iconWrapper}>
         <Icons.authBack width="100%" height={300} />
       </View>
@@ -68,6 +75,7 @@ const LoginScreen = () => {
         </View>
       </View>
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

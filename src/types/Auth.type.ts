@@ -5,13 +5,14 @@ export interface LoginBody {
 
 export interface RegisterBody {
   firstName: string;
-  lastName: string;
+  secondName: string;
   email: string;
   password: string;
 }
 
 export interface UserResponse {
-  name: string;
+  id: string;
+  fullName: string;
   email: string;
   token: string;
 }

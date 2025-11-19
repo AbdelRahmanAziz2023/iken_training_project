@@ -3,21 +3,13 @@ import { Redirect, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 
 if (__DEV__) {
   require("../../ReactotronConfig");
 }
-
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowBanner: true,
-//     shouldPlaySound: true,
-//     shouldSetBadge: true,
-//     shouldShowList: true,
-//   }),
-// });
 
 function RootNavigator() {
   const user = {};
@@ -42,10 +34,10 @@ export default function RootLayout() {
   if (!loaded) return null;
   return (
     <Provider store={store}>
-       <KeyboardProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-      <RootNavigator />
-      {/* <Toast /> Place here */}
+      <KeyboardProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+        <RootNavigator />
+        <Toast />
       </KeyboardProvider>
     </Provider>
   );

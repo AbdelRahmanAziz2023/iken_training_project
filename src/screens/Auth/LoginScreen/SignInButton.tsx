@@ -1,6 +1,7 @@
+import CustomText from "@/src/components/common/CustomText";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
-import CustomText from "../../components/common/CustomText";
+
 
 const SignInButton = () => {
   const router = useRouter();

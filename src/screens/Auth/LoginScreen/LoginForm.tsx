@@ -5,7 +5,7 @@ import { validateLogInInput } from "@/src/utils/validation";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import SignInButton from "./SignInButton";
+import SignInButton from "./SignupButton";
 
 const LoginForm = () => {
   const router = useRouter();

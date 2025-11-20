@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 
-const SignInButton = () => {
+const SignupButton = () => {
   const router = useRouter();
   const signUpPress = () => {
     router.push("/(auth)/Register");
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInButton;
+export default SignupButton;

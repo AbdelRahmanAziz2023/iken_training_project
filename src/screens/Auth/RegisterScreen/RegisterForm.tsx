@@ -5,6 +5,7 @@ import { validateSignUpInput } from "@/src/utils/validation";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import SignInButton from "./SigninButton";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -59,6 +60,7 @@ const RegisterForm = () => {
         onPress={handleRegister}
         isDisabled={isLoading}
       />
+      <SignInButton />
     </View>
   );
 };

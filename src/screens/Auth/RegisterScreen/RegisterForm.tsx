@@ -6,7 +6,7 @@ import { validateSignUpInput } from "@/src/utils/validation";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import SignInButton from "./SigninButton";
+import AuthFoot from "../AuthFoot";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const RegisterForm = () => {
       <CustomTextField
         value={secondName}
         onChangeText={setSecondName}
-        name="Second Name"
+        name="Last Name"
         placeholder="Enter your last name"
       />
       <CustomTextField
@@ -64,7 +64,7 @@ const RegisterForm = () => {
         onPress={handleRegister}
         isDisabled={isLoading}
       />
-      <SignInButton />
+      <AuthFoot targetName="Login" textButton="Login" question="Already have an account?" />
     </View>
   );
 };

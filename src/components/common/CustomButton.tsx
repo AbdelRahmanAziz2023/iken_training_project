@@ -1,11 +1,9 @@
 import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import CustomText from './CustomText';
-import {Colors} from '@/src/constants/colors'
 
 type Props = {
   onPress?: () => void;
   title: string;
-  isBordered?: boolean;
   isDisabled?: boolean;
   btnStyle?: ViewStyle;
 };
@@ -13,7 +11,6 @@ type Props = {
 const CustomButton = ({
   onPress,
   title,
-  isBordered = false,
   isDisabled = false,
   btnStyle,
 }: Props) => {
@@ -21,7 +18,7 @@ const CustomButton = ({
     <TouchableOpacity
       onPress={onPress}
       disabled={isDisabled}
-      style={[isBordered ? styles.roundedStyle : styles.mainStyle, btnStyle]}
+      style={[styles.mainStyle, btnStyle]}
     >
       <CustomText text={title} textStyle={styles.textStyle} />
     </TouchableOpacity>
@@ -30,7 +27,7 @@ const CustomButton = ({
 
 const styles = StyleSheet.create({
   mainStyle: {
-    width: '100%',
+    width: "100%",
     height: 60,
     backgroundColor: Colors.mustard,
     color: '#fff',
@@ -38,19 +35,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 12,
   },
-  roundedStyle: {
-    width: '100%',
-    borderRadius: 12,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#2b6cb0',
-  },
   textStyle: {
-    fontFamily: 'SenBold',
+    fontFamily: "SenBold",
     fontSize: 18,
-    color: '#fff',
+    color: "#fff",
   },
 });
 

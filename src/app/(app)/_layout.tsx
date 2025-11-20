@@ -1,10 +1,61 @@
-import { Stack } from "expo-router";
+import { TabBarIcon } from "@/src/components/common/TabBarIcon";
+import { Colors } from "@/src/constants/colors";
+import { Icons } from "@/src/constants/images";
+import { Tabs } from "expo-router";
 import React from "react";
 
 export default function AppLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }} initialRouteName="Home">
-      <Stack.Screen name="Home" />
-    </Stack>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: Colors.red,
+        tabBarInactiveTintColor: Colors.textMuted,
+        tabBarStyle: {
+          backgroundColor: Colors.white,
+          borderWidth: 1,
+          borderColor: Colors.border,
+          borderRadius: 50,
+          height: 60,
+          paddingBottom: 10,
+          marginHorizontal: 16,
+          marginBottom: 56,
+          position: 'absolute',
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: "SenMedium",
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="(home)"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon
+              icon={Icons.home}
+              color={color}
+              size={size}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="(profile)"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon
+              icon={Icons.user}
+              color={color}
+              size={size}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }

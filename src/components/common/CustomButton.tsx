@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import CustomText from './CustomText';
+import {Colors} from '@/src/constants/colors'
 
 type Props = {
   onPress?: () => void;
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   mainStyle: {
     width: '100%',
     height: 60,
-    backgroundColor: '#0672CB',
+    backgroundColor: Colors.mustard,
     color: '#fff',
     alignItems: 'center',
     justifyContent: 'center',

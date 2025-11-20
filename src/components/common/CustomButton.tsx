@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import CustomText from './CustomText';
+import {Colors} from '@/src/constants/colors'
 
 type Props = {
   onPress?: () => void;

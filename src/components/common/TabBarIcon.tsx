@@ -12,7 +12,7 @@ interface TabBarIconProps {
 export const TabBarIcon = ({ icon: Icon, color, size, focused }: TabBarIconProps) => {
   return (
     <View style={styles.iconContainer}>
-      <Icon width={size} height={size} stroke={color} />
+      <Icon width={size} height={size}  />
       {focused && <View style={styles.activeIndicator} />}
     </View>
   );

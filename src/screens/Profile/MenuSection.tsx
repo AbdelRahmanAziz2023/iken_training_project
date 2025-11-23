@@ -27,7 +27,7 @@ const MenuSection = ({
         onPress={onNotificationsPress}
       />
       <MenuItem
-        icon={Icons.user}
+        icon={Icons.activeUser}
         title="Account Settings"
         onPress={onAccountSettingsPress}
         iconStroke={Colors.textPrimary}

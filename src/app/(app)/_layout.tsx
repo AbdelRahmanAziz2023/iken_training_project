@@ -34,7 +34,7 @@ export default function AppLayout() {
           title: "Home",
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon
-              icon={Icons.home}
+              icon={focused ? Icons.activeHome : Icons.home}
               color={color}
               size={size}
               focused={focused}
@@ -48,7 +48,7 @@ export default function AppLayout() {
           title: "Profile",
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon
-              icon={Icons.user}
+              icon={focused ? Icons.activeUser : Icons.user}
               color={color}
               size={size}
               focused={focused}

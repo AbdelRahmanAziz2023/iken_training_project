@@ -1,4 +1,6 @@
 import Error from '../../assets/images/error.svg';
+import ActiveHome from '../../assets/images/icons/ActiveHome.svg';
+import ActiveUser from '../../assets/images/icons/ActiveUser.svg';
 import Arrow from '../../assets/images/icons/Arrow.svg';
 import AuthBack from '../../assets/images/icons/AuthBack.svg';
 import Back from '../../assets/images/icons/back.svg';
@@ -42,14 +44,17 @@ import UnderArrow from '../../assets/images/icons/Under Arrow.svg';
 import User from '../../assets/images/icons/User.svg';
 import Volume from '../../assets/images/icons/volume-1.svg';
 import Watch from '../../assets/images/icons/Watch.svg';
+import LogoIcon from '../../assets/images/LogoIcon.svg';
 
 
 export const Icons = {
   back: Back,
   bell: Bell,
   user: User,
+  activeUser: ActiveUser,
   search: Search,
   home: Home,
+  activeHome: ActiveHome,
   heart: Heart,
   watch: Watch,
   underArrow: UnderArrow,
@@ -92,4 +97,5 @@ export const Icons = {
 
 export const Images = {
   error: Error,
+  logoIcon: LogoIcon,
 };

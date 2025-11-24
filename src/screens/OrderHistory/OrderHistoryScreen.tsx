@@ -1,22 +1,12 @@
 import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
-import { Icons } from "@/src/constants/images";
-import { useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderHistoryScreen = () => {
-  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <Icons.back width={24} height={24} />
-        </Pressable>
-        <CustomText text="Order History" textStyle={styles.headerTitle} />
-        <View style={{ width: 40 }} />
-      </View>
 
       <ScrollView style={styles.content}>
         <View style={styles.emptyState}>

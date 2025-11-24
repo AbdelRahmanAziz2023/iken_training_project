@@ -1,7 +1,7 @@
 export const Colors = {
   // Primary colors
-  red: '#D83427',
-  lightred: '#FF4C4C',
+  red: '#EB1700',
+  lightred: '#F44322',
   mustard: '#F4A629',
   success: '#4BB543',
   

@@ -1,9 +1,8 @@
 import { getToken } from "@/src/store/expo-secure-store";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Easing, StyleSheet, View } from "react-native";
+import { Animated, Easing, Image, StyleSheet, View } from "react-native";
 
-import AppLogo from "../../../assets/images/AppLogo.svg";
 import { Icons } from "../../constants/images";
 
 const SplashScreen: React.FC = () => {
@@ -90,7 +89,11 @@ const SplashScreen: React.FC = () => {
           { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
         ]}
       >
-        <AppLogo width={300} height={300} />
+        <Image 
+          source={require("../../../assets/images/Order-Together-Logo.png")} 
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </Animated.View>
     </View>
   );
@@ -105,6 +108,10 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     zIndex: 10,
+  },
+  logo: {
+    width: 300,
+    height: 300,
   },
   topLeft: { position: "absolute", top: 0, left: 0 },
   bottomRight: { position: "absolute", bottom: 0, right: 0 },

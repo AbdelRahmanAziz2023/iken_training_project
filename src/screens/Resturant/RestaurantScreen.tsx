@@ -38,9 +38,6 @@ const RestaurantScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.subtitle}>{restaurants.length} restaurants available</Text>
-      </View>
       
       <RestaurantList 
         restaurants={restaurants}
@@ -54,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-    paddingBottom: 100,
+    paddingBottom: 80,
   },
   centerContainer: {
     flex: 1,
@@ -62,23 +59,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.background,
   },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 4,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderColor: Colors.gray300,
-  },
   title: {
     fontSize: 32,
     fontFamily: 'SenBold',
     color: Colors.textPrimary,
     marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    fontFamily: 'SenRegular',
-    color: Colors.textMuted,
   },
   loadingText: {
     marginTop: 16,

@@ -1,5 +1,5 @@
 import RestaurantScreen from "@/src/screens/Resturant/RestaurantScreen";
 
-export default function OrderHistory() {
+export default function Restaurant() {
     return <RestaurantScreen />
 }

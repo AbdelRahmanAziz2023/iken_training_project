@@ -1,17 +1,17 @@
-import { Colors } from '@/src/constants/colors';
-import { Restaurant } from '@/src/services/api/Endpoints/RestaurantEndpoints';
-import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { RestaurantCard } from './RestaurantCard';
+import { Colors } from "@/src/constants/colors";
+import { Restaurant } from "@/src/services/api/Endpoints/RestaurantEndpoints";
+import React from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { RestaurantCard } from "./RestaurantCard";
 
 interface RestaurantListProps {
   restaurants: Restaurant[];
   onRestaurantPress?: (restaurant: Restaurant) => void;
 }
 
-export const RestaurantList: React.FC<RestaurantListProps> = ({ 
-  restaurants, 
-  onRestaurantPress 
+export const RestaurantList: React.FC<RestaurantListProps> = ({
+  restaurants,
+  onRestaurantPress,
 }) => {
   const renderItem = ({ item }: { item: Restaurant }) => (
     <RestaurantCard
@@ -20,6 +20,16 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
       onPress={() => onRestaurantPress?.(item)}
     />
   );
+
+  const header = () => {
+    return (
+      <View style={styles.header}>
+        <Text style={styles.subtitle}>
+          {restaurants.length} restaurants available
+        </Text>
+      </View>
+    );
+  };
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
@@ -35,22 +45,34 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={renderEmpty}
       showsVerticalScrollIndicator={false}
+      ListHeaderComponent={header}
     />
   );
 };
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingTop: 16,
     paddingBottom: 32,
   },
   emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 64,
   },
   emptyText: {
+    fontSize: 16,
+    fontFamily: "SenRegular",
+    color: Colors.textMuted,
+  },
+    header: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: Colors.gray300,
+    marginBottom: 12,
+  },
+    subtitle: {
     fontSize: 16,
     fontFamily: 'SenRegular',
     color: Colors.textMuted,

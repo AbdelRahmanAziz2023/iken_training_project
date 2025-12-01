@@ -42,7 +42,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menuItems, onItemPress }) =>
 const styles = StyleSheet.create({
   listContent: {
     paddingTop: 16,
-    paddingBottom: 32,
+    paddingBottom: 110,
   },
   emptyContainer: {
     flex: 1,

@@ -37,7 +37,7 @@ const PasscodePopup = ({ isVisible = false, onClose }: Props) => {
     >
       <View style={styles.overlay}>
         <View style={styles.alertBox}>
-          <CustomText text="Enter Passcode" textStyle={styles.title} />
+          <CustomText text="Enter Passcode" textStyle={[styles.title]} />
 
           <CustomTextField
             placeholder="Passcode"
@@ -53,7 +53,7 @@ const PasscodePopup = ({ isVisible = false, onClose }: Props) => {
           />
 
           <TouchableOpacity onPress={handleClose}>
-            <CustomText text="Close" textStyle={styles.closeText} />
+            <CustomText text="Close" textStyle={[styles.closeText]} />
           </TouchableOpacity>
         </View>
       </View>

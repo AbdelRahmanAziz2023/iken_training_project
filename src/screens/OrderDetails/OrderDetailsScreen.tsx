@@ -1,3 +1,4 @@
+import CustomNote from "@/src/components/common/CustomNote";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import DeliveryFeePopup from "./DeliveryFeePopup";
@@ -29,13 +30,13 @@ const OrderDetailsScreen = () => {
   // -------------------
   // ORDER STATUS STATE,, will handle it after backend
   // -------------------
-  const [status, setStatus] = React.useState("locked");
+  const [status, setStatus] = React.useState("opened");
   // placed | locked | opened
 
   const isPlaced = status === "placed";
   const isLocked = status === "locked";
   const isOpened = status === "opened";
-  const isCreator = true;
+  const isCreator = false; // to be handled with backend
 
   // -------------------
   // DELIVERY FEE POPUP,, still working on it
@@ -63,6 +64,8 @@ const OrderDetailsScreen = () => {
           <OrderHeader />
           <OrderList orders={dummyOrders} isOpened={isOpened} />
           <OrderTotals subtotal={subtotal} />
+
+          {isCreator && isOpened && <CustomNote note="Note: Some notes" onClear={() => {}} />}
 
           <OrderActions
             isOpened={isOpened}

@@ -1,21 +1,28 @@
-import { Colors } from '@/src/constants/colors';
-import React, { useState } from 'react';
+import { Colors } from "@/src/constants/colors";
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import CustomButton from './CustomButton';
+  selectCartItems,
+  updateItemQuantity,
+} from "@/src/store/slices/cartSlice";
+import React, { useEffect, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import CustomButton from "./CustomButton";
+import CustomText from "./CustomText";
+import { QuantityController } from "./QuantityController";
 
 interface CustomizationModalProps {
   visible: boolean;
+  itemID: number;
   itemName: string;
   existingNote?: string;
   onConfirm: (note: string) => void;
@@ -24,107 +31,120 @@ interface CustomizationModalProps {
 
 export const CustomizationModal: React.FC<CustomizationModalProps> = ({
   visible,
+  itemID,
   itemName,
-  existingNote = '',
+  existingNote = "",
   onConfirm,
   onCancel,
 }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const cartItem = cartItems.find((i) => i.itemID === itemID);
+
+
+  const [quantity, setQuantity] = useState(cartItem?.quantity || 1);
   const [note, setNote] = useState(existingNote);
 
-  React.useEffect(() => {
-    if (visible) {
-      setNote(existingNote);
-    }
+  useEffect(() => {
+    if (visible) setNote(existingNote);
   }, [visible, existingNote]);
 
+  const handleIncrease = () =>
+    dispatch(updateItemQuantity({ itemID, quantity: quantity + 1 }));
+  const handleDecrease = () =>
+    dispatch(
+      updateItemQuantity({ itemID, quantity: Math.max(1, quantity - 1) })
+    );
+
   const handleConfirm = () => {
-    Keyboard.dismiss();
-    onConfirm(note);
+    // Trim and normalize spaces: remove leading/trailing, collapse multiple spaces
+    const normalized = note.trim().replace(/\s+/g, " ");
+    onConfirm(normalized);
   };
 
-  const handleCancel = () => {
-    Keyboard.dismiss();
-    onCancel();
-  };
-
-  const handleClearNote = () => {
-    setNote('');
-  };
+  const handleClearNote = () => setNote("");
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={handleCancel}
-    >
+    <Modal visible={visible} transparent animationType="fade">
       <TouchableOpacity
         style={styles.overlay}
         activeOpacity={1}
-        onPress={handleCancel}
+        onPress={onCancel}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.keyboardView}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
           >
-            <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
+            <TouchableOpacity activeOpacity={1}>
               <View style={styles.modalContainer}>
-              <View style={styles.header}>
-                <Text style={styles.title}>Customize Your Order</Text>
-                <Text style={styles.itemName}>{itemName}</Text>
-              </View>
-
-              <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                <View style={styles.labelRow}>
-                  <Text style={styles.label}>Add Special Instructions</Text>
-                  {note.length > 0 && (
-                    <TouchableOpacity onPress={handleClearNote}>
-                      <Text style={styles.clearButton}>Clear</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="E.g., No onions, extra sauce, well done..."
-                  placeholderTextColor={Colors.textMuted}
-                  value={note}
-                  onChangeText={setNote}
-                  multiline
-                  numberOfLines={4}
-                  textAlignVertical="top"
-                  maxLength={200}
-                />
-                <Text style={styles.charCount}>{note.length}/200</Text>
-              </ScrollView>
-
-              <View style={styles.footer}>
-                {existingNote ? (
-                  <CustomButton
-                    title="Remove Note"
-                    onPress={() => {
-                      Keyboard.dismiss();
-                      onConfirm('');
-                    }}
-                    btnStyle={styles.removeButton}
+                <View style={styles.header}>
+                  <CustomText
+                    text="Customize Item"
+                    textStyle={[styles.title]}
                   />
-                ) : null}
-                <CustomButton
-                  title="Cancel"
-                  onPress={handleCancel}
-                  btnStyle={styles.cancelButton}
-                />
-                <CustomButton
-                  title="Confirm"
-                  onPress={handleConfirm}
-                  btnStyle={styles.confirmButton}
-                />
-              </View>
+                  <CustomText text={itemName} textStyle={[styles.itemName]} />
+                </View>
+
+                {/* QUANTITY SECTION */}
+                <View style={styles.quantitySection}>
+                  <QuantityController
+                    quantity={quantity}
+                    onIncrease={handleIncrease}
+                    onDecrease={handleDecrease}
+                  />
+                </View>
+                {/* NOTE INPUT */}
+                <View style={styles.content}>
+                  <View style={styles.labelRow}>
+                    <CustomText
+                      text="Special Instructions"
+                      textStyle={[styles.label]}
+                    />
+                    {note.length > 0 && (
+                      <TouchableOpacity onPress={handleClearNote}>
+                        <CustomText
+                          text="Clear"
+                          textStyle={[styles.clearButton]}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="e.g. Extra sauce, no onions..."
+                    placeholderTextColor={Colors.textMuted}
+                    multiline
+                    value={note}
+                    maxLength={50}
+                    onChangeText={(text) => {
+                      // Collapse multiple spaces into single space, trim leading/trailing per line
+                      const normalized = text.replace(/\s{2,}/g, " ");
+                      setNote(normalized);
+                    }}
+                  />
+                  <View style={styles.charCountContainer}>
+                    <Text style={styles.charCount}>{note.length}/50</Text>
+                  </View>
+                </View>
+
+                {/* FOOTER */}
+                <View style={styles.footer}>
+                  <CustomButton
+                    title="Add to Cart"
+                    onPress={handleConfirm}
+                    btnStyle={styles.confirmButton}
+                  />
+                  <TouchableOpacity
+                    onPress={onCancel}
+                    style={styles.closeContainer}
+                  >
+                    <CustomText text="Close" textStyle={[styles.closeText]} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </TouchableOpacity>
           </ScrollView>
@@ -137,107 +157,107 @@ export const CustomizationModal: React.FC<CustomizationModalProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    paddingHorizontal: '7.5%',
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   keyboardView: {
-    width: '100%',
-    maxWidth: 400,
-    flex: 1,
-  },
+     flex: 1 ,
+   
+    },
   scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingVertical: 40,
+    flex: 1,
+    justifyContent: "center",
+    width: "100%",
   },
   modalContainer: {
-    width: '100%',
     backgroundColor: Colors.white,
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    borderRadius: 24,
+    padding: 30,
+    marginHorizontal: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
     elevation: 8,
   },
   header: {
     marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-    paddingBottom: 16,
   },
   title: {
-    fontSize: 22,
-    fontFamily: 'SenBold',
-    color: Colors.textPrimary,
-    marginBottom: 8,
+    fontSize: 12,
+    fontFamily: "SenMedium",
+    color: Colors.textMuted,
+    letterSpacing: 1,
+    textTransform: "uppercase",
   },
   itemName: {
-    fontSize: 16,
-    fontFamily: 'SenMedium',
-    color: Colors.red,
+    fontSize: 28,
+    fontFamily: "SenBold",
+    color: Colors.textPrimary,
+    marginTop: 5,
+  },
+  quantitySection: {
+    marginBottom: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
   content: {
-    maxHeight: 200,
-    marginBottom: 20,
+    marginVertical: 10,
   },
   labelRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
   },
   label: {
     fontSize: 14,
-    fontFamily: 'SenMedium',
+    fontFamily: "SenMedium",
     color: Colors.textPrimary,
+    letterSpacing: 0.3,
   },
   clearButton: {
     fontSize: 13,
-    fontFamily: 'SenMedium',
+    fontFamily: "SenMedium",
     color: Colors.red,
   },
   textInput: {
-    backgroundColor: Colors.gray50,
-    borderRadius: 12,
-    padding: 12,
-    fontSize: 15,
-    fontFamily: 'SenRegular',
-    color: Colors.textPrimary,
+    borderWidth: 1.5,
+    borderRadius: 14,
+    padding: 14,
     minHeight: 100,
-    borderWidth: 1,
+    backgroundColor: Colors.gray50,
     borderColor: Colors.border,
+    fontFamily: "SenMedium",
+    fontSize: 14,
+    color: Colors.textPrimary,
+    textAlignVertical: "top",
+  },
+  charCountContainer: {
+    alignItems: "flex-end",
+    marginTop: 8,
   },
   charCount: {
     fontSize: 12,
-    fontFamily: 'SenRegular',
     color: Colors.textMuted,
-    textAlign: 'right',
-    marginTop: 4,
+    fontFamily: "SenMedium",
   },
   footer: {
-    flexDirection: 'row',
-    gap: 12,
-    flexWrap: 'wrap',
-  },
-  removeButton: {
-    width: '100%',
-    height: 44,
-    backgroundColor: Colors.gray200,
-    marginBottom: 8,
-  },
-  cancelButton: {
-    flex: 1,
-    height: 44,
-    backgroundColor: Colors.red,
+    marginTop: 20,
+    gap: 5,
   },
   confirmButton: {
-    flex: 1,
-    height: 44,
     backgroundColor: Colors.red,
+  },
+  closeContainer: {
+    marginTop: 8,
+    alignItems: "center",
+    paddingVertical: 5,
+  },
+  closeText: {
+    fontSize: 14,
+    color: Colors.gray500,
+    textDecorationLine: "underline",
+    fontFamily: "SenMedium",
   },
 });

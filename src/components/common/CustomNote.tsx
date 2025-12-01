@@ -12,7 +12,7 @@ interface CustomNoteProps {
 const CustomNote: React.FC<CustomNoteProps> = ({ note, onClear }) => {
   return (
     <View style={styles.container}>
-      <CustomText text={`Note: ${note}`} textStyle={styles.noteText} />
+      <CustomText text={`Note: ${note}`} textStyle={[styles.noteText]} />
       {onClear && (
         <Pressable onPress={onClear} style={styles.clearButton}>
           <Ionicons name="close-circle" size={20} color={Colors.textMuted} />

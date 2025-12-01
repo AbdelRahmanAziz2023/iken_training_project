@@ -1,8 +1,8 @@
-import { Colors } from '@/src/constants/colors';
-import { Icons } from '@/src/constants/images';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SvgProps } from 'react-native-svg';
+import { Colors } from "@/src/constants/colors";
+import { Icons } from "@/src/constants/images";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { SvgProps } from "react-native-svg";
 
 interface QuantityControllerProps {
   quantity: number;
@@ -18,35 +18,37 @@ export const QuantityController: React.FC<QuantityControllerProps> = ({
   const MinusIcon = Icons.minus as React.FC<SvgProps>;
   const PlusIcon = Icons.plus as React.FC<SvgProps>;
 
+  const renderButton = (
+    IconComponent: React.FC<SvgProps>,
+    onPress: () => void
+  ) => (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+    >
+      <IconComponent width={12} height={12} fill={Colors.white} />
+    </Pressable>
+  );
+
   return (
     <View style={styles.container}>
-      <Pressable
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-        onPress={onDecrease}
-      >
-        <MinusIcon width={12} height={12} fill={Colors.white} />
-      </Pressable>
+      {renderButton(MinusIcon, onDecrease)}
 
-      <View style={styles.quantityContainer}>
-        <Text style={styles.quantityText}>{quantity}</Text>
-      </View>
+      <Text style={styles.quantityText}>{quantity}</Text>
 
-      <Pressable
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-        onPress={onIncrease}
-      >
-        <PlusIcon width={12} height={12} fill={Colors.white} />
-      </Pressable>
+      {renderButton(PlusIcon, onIncrease)}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    maxWidth: 'auto',
     borderRadius: 24,
-    backgroundColor: Colors.mustard,
+    backgroundColor: Colors.lightred,
     paddingVertical: 8,
     paddingHorizontal: 12,
     gap: 16,
@@ -55,21 +57,18 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.35)",
   },
   buttonPressed: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-  },
-  quantityContainer: {
-    minWidth: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   quantityText: {
+    minWidth: 24,
+    textAlign: "center",
     fontSize: 18,
-    fontFamily: 'SenBold',
+    fontFamily: "SenBold",
     color: Colors.white,
   },
 });

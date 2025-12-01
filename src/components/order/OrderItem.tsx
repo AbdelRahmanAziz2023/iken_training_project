@@ -1,144 +1,138 @@
 import { Colors } from "@/src/constants/colors";
 import { getPaidStatusStyle } from "@/src/helper/getPaidStausStyle";
 import { getPaymentStatusStyle } from "@/src/helper/getPaymentStatusStyle";
+import { getUserStatusStyle } from "@/src/helper/getUserStatusStyle";
 import { useRouter } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import CustomText from "../common/CustomText";
 
-type Props = {
-  item: any;
+type OrderItemProps = {
+  item: {
+    id: string;
+    restaurant: string;
+    total: number;
+    placedOn: string;
+    image: string;
+    isHost: boolean;
+    status: "Paid" | "Unpaid" | "Completed" | "Pending" | string;
+  };
 };
 
-const OrderItem = ({ item }: Props) => {
+const OrderItem = ({ item }: OrderItemProps) => {
   const router = useRouter();
-  const isHost=false;
+
+  const { isHost, status } = item;
+
+
+
   const onPress = () => {
     router.push({
-      pathname: "/(app)/(home)/OrderDetails",
-      params: { orderId: " "},
+      pathname: isHost && status === "Pending" ? "/(app)/(home)/PaymentTracker" : "/(app)/(home)/Receipt",
+      params: { orderId: item.id, status: item.status },
     });
   };
 
-  const status= isHost?"Completed":"Unpaid";
-
-  const statusBadge = !isHost?getPaidStatusStyle(status):getPaymentStatusStyle(status);
+  // Host uses PaymentStatus, others use PaidStatus
+  const statusBadgeStyles = isHost
+    ? getPaymentStatusStyle(status)
+    : getPaidStatusStyle(status);
 
   return (
     <Pressable style={styles.orderCard} onPress={onPress}>
+      {/* Header with image + status */}
       <View style={styles.headerRow}>
         <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: "https://thumbs.dreamstime.com/b/restaurant-logo-design-idea-chef-hat-fork-graphic-leaf-shape-food-drinks-symbol-concept-cooking-eating-vector-template-173237325.jpg",
-            }}
-            style={styles.image}
-          />
+          <Image source={{ uri: item.image }} style={styles.image} />
         </View>
-        <View style={[styles.statusBadge, statusBadge]}>
-          <CustomText text={status} textStyle={statusBadge} />
+
+        <View style={[styles.statusBadge, statusBadgeStyles]}>
+          <CustomText text={status} textStyle={[styles.statusText, statusBadgeStyles ]} />
         </View>
       </View>
-      <CustomText text={`Pizza Hut`} textStyle={styles.restaurantName} />
 
-      { isHost&&<CustomText text={`Hosted by you `} textStyle={styles.orderTotal} />}
-      { !isHost&&<CustomText text={`60.00 EGP`} textStyle={styles.orderTotal} />}
-     
+      {/* Restaurant Name */}
+      <CustomText text={item.restaurant} textStyle={[styles.restaurantName]} />
+
+      {/* Host Note OR Price */}
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }} >
+        <View style={[styles.statusBadge, getUserStatusStyle(isHost?"Host":"Participant")]}>
+          <CustomText text={isHost?"Host":"Participant"} textStyle={[styles.statusText, getUserStatusStyle(isHost?"Host":"Participant") ]} />
+        </View>
+        <CustomText text={`${item.total} EGP`} textStyle={[styles.orderTotal]} />
+      </View>
+      {/* Order date */}
       <CustomText
-        text={`Placed on: 10/10/2023`}
-        textStyle={styles.orderDate}
+        text={`Placed on: ${item.placedOn}`}
+        textStyle={[styles.orderDate]}
       />
     </Pressable>
   );
 };
+
 const styles = StyleSheet.create({
   orderCard: {
     backgroundColor: "#fff",
     borderRadius: 20,
     padding: 20,
-    marginBottom: 10,
+    marginBottom: 12,
     shadowColor: "#000",
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 5,
+    shadowRadius: 8,
+    elevation: 4,
     borderWidth: 1,
     borderColor: "#f0f0f0",
   },
+
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-  
     marginBottom: 12,
   },
+
   imageContainer: {
     width: 65,
     height: 65,
     borderRadius: 16,
-    borderWidth: 2,
-    borderColor: Colors.white,
     overflow: "hidden",
+    borderWidth: 2,
+    borderColor: "#fff",
   },
 
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  restaurantName: {
-    fontSize: 22,
-    fontFamily: "SenBold",
-    color: "#222",
-    marginBottom: 5,
-  },
-  orderTotal: {
-    color: "#444",
-    fontWeight: "500",
-    marginBottom: 4,
-  },
-  orderAddress: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-    lineHeight: 20,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: "#E5E5E5",
-    marginVertical: 12,
-  },
-  orderDate: {
-    fontSize: 13,
-    color: "#999",
-    fontWeight: "400",
-  },
+  image: { width: "100%", height: "100%" },
+
   statusBadge: {
     borderRadius: 50,
     paddingVertical: 6,
     paddingHorizontal: 12,
+    justifyContent: "center",
     height: 32,
-    backgroundColor: "#FF6B6B", // fallback if getStatusBadgeStyle fails
+    borderWidth: 1,
   },
+
   statusText: {
     color: Colors.white,
     fontSize: 13,
     fontFamily: "SenBold",
   },
-  emptyText: {
-    textAlign: "center",
-    color: "#AAA",
-    fontSize: 14,
-    marginTop: 30,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  headerTitle: {
-    fontSize: 18,
+
+  restaurantName: {
+    fontSize: 22,
     fontFamily: "SenBold",
-    color: "#111",
+    color: "#222",
+    marginBottom: 6,
   },
 
+  orderTotal: {
+    color: "#444",
+    fontWeight: "500",
+    marginBottom: 4,
+  },
+
+  orderDate: {
+    fontSize: 13,
+    color: "#999",
+  },
 });
 
 export default OrderItem;

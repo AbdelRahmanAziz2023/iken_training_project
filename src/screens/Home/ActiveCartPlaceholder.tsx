@@ -5,19 +5,15 @@ import { StyleSheet, View } from "react-native";
 const ActiveCartPlaceholder = () => {
   return (
     <View style={styles.wrapper}>
-      {/* <View style={styles.header}>
-        <CustomText text="Active Cart" textStyle={styles.title} />
-      </View> */}
-
       <View style={styles.container}>
         <View style={styles.innerContent}>
           <CustomText
             text="🛒 No active cart right now"
-            textStyle={styles.mainMessage}
+            textStyle={[styles.mainMessage]}
           />
           <CustomText
             text="You can create a new order or join an existing one 👆🏻"
-            textStyle={styles.subMessage}
+            textStyle={[styles.subMessage]}
           />
         </View>
       </View>

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextStyle } from 'react-native';
 
 type Props = {
   text: string;
-  textStyle?: TextStyle;
+  textStyle?: TextStyle[];
 };
 
 const CustomText = ({ text, textStyle }: Props) => {

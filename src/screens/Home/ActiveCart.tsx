@@ -9,15 +9,18 @@ const ActiveCart = () => {
   const router = useRouter();
 
   const handleGoToCart = () => {
-    router.push("/(app)/(home)/PaymentTracker");
+    router.push({
+      pathname: "/(app)/(home)/OrderDetails",
+      params: { cartId: "12345" },
+    });
   };
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.header}>
-        <CustomText text="Active Cart" textStyle={styles.title} />
+        <CustomText text="Active Cart" textStyle={[styles.title]} />
         <View style={[styles.statusBadge, getStatusBadgeStyle("opened")]}>
-          <CustomText text="Opened" textStyle={styles.statusText} />
+          <CustomText text="Opened" textStyle={[styles.statusText]} />
         </View>
       </View>
 
@@ -33,15 +36,15 @@ const ActiveCart = () => {
           </View>
 
           <View style={styles.textGroup}>
-            <CustomText text="MacDonald's" textStyle={styles.cartTitle} />
-            <CustomText text="Hosted by Saleh" textStyle={styles.hostText} />
-            <CustomText text="Participants: 3" textStyle={styles.hostText} />
+            <CustomText text="MacDonald's" textStyle={[styles.cartTitle]} />
+            <CustomText text="Hosted by Saleh" textStyle={[styles.hostText]} />
+            <CustomText text="Participants: 3" textStyle={[styles.hostText]} />
           </View>
         </View>
 
         <View style={styles.rightWrapper}>
-          <CustomText text="Your Total" textStyle={styles.totalLabel} />
-          <CustomText text="100 EGP" textStyle={styles.totalValue} />
+          <CustomText text="Your Total" textStyle={[styles.totalLabel]} />
+          <CustomText text="100 EGP" textStyle={[styles.totalValue]} />
 
           <CustomButton
             title="Go To Cart →"

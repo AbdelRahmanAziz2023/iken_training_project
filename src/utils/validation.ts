@@ -7,9 +7,10 @@ export const validateEmail = (email: string): boolean => {
 };
 
 export const validatePassword = (password: string): boolean => {
-  // Simple length check for 8 or more characters
-  return password.length >= 8;
+  // Simple regex for basic password validation
+  return password.length >= 6 && !/\s/.test(password);
 };
+
 
 export const validateLogInInput = (
   email: string,

@@ -1,3 +1,4 @@
+import ActiveCartSkeleton from "@/src/components/skeleton/ActiveCartSkeleton";
 import { Colors } from "@/src/constants/colors";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -15,6 +16,7 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const isActiveCart = true;
+  const isLoading = false;
 
   const showPasscodePopup = () => {
     setIsVisible(true);
@@ -37,7 +39,13 @@ const HomeScreen = () => {
           onJoin={showPasscodePopup}
           onCreate={navigateToRestaurant}
         />
-        {!isActiveCart ? <ActiveCartPlaceholder /> : <ActiveCart />}
+        {isLoading ? (
+          <ActiveCartSkeleton />
+        ) : !isActiveCart ? (
+          <ActiveCartPlaceholder />
+        ) : (
+          <ActiveCart />
+        )}
 
         <RecentOrders />
       </ScrollView>

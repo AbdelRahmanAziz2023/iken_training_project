@@ -1,29 +1,46 @@
+import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import * as Clipboard from "expo-clipboard";
+import { Pressable, StyleSheet, View } from "react-native";
 
-const PaymentReceiver = () => {
+type Props = {
+  isEditing?: boolean;
+  textToCopy?: string;
+};
+
+const PaymentReceiver = ({
+  isEditing = false,
+  textToCopy = "ahmed@instapay",
+}: Props) => {
+  const handleCopy = async () => {
+    // Copy logic here
+    await Clipboard.setStringAsync(textToCopy);
+    alert("Copied to clipboard 📋");
+  };
   return (
     <View style={styles.wrapper}>
       {/* Icon */}
       <View style={styles.iconBox}>
-        <Text style={styles.icon}>💳</Text>
+        <CustomText text="💳" textStyle={[styles.icon]} />
       </View>
 
       {/* Text Info */}
       <View style={{ flex: 1 }}>
-        <Text style={styles.label}>RECEIVING ON</Text>
-        <Text style={styles.value}>ahmed@instapay</Text>
+        <CustomText text="Instapay ID" textStyle={[styles.label]} />
+        <CustomText text={textToCopy} textStyle={[styles.value]} />
       </View>
 
       {/* Actions */}
       <View style={styles.actions}>
-        <Pressable onPress={() => {}}>
-          <Text style={styles.actionText}>Copy</Text>
+        <Pressable onPress={handleCopy}>
+          <CustomText text="Copy" textStyle={[styles.actionText]} />
         </Pressable>
 
-        <Pressable onPress={() => {}}>
-          <Text style={styles.actionText}>Edit</Text>
-        </Pressable>
+        {isEditing && (
+          <Pressable onPress={() => {}}>
+            <CustomText text="Edit" textStyle={[styles.actionText]} />
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -40,6 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: Colors.gray100,
     padding: 16,
+    marginVertical: 12,
     gap: 12,
   },
   iconBox: {
@@ -58,13 +76,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     color: "#6B7280",
-    fontWeight: "700",
+    fontFamily: "SenBold",
     textTransform: "uppercase",
   },
   value: {
     fontSize: 14,
     color: "#111827",
-    fontWeight: "500",
+    fontFamily: "SenMedium",
   },
   actions: {
     flexDirection: "row",
@@ -74,6 +92,6 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: 13,
     color: "#3B82F6", // blue-500
-    fontWeight: "600",
+    fontFamily: "SenBold",
   },
 });

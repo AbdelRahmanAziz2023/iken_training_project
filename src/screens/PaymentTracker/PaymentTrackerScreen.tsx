@@ -1,5 +1,6 @@
 import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import ParticipantsHeader from "./ParticipantsHeader";
@@ -16,21 +17,23 @@ const PaymentTrackerScreen = ({}: Props) => {
        setCollectedAmount(prev=>prev+amount);
     }
 
+    const {orderId}=useLocalSearchParams<{orderId:string}>();
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer} style={styles.container}>
       <View style={styles.dataSection}>
         {/* Image */}
         <View style={styles.imageContainer}>
-          <CustomText text="💰" textStyle={styles.image} />
+          <CustomText text="💰" textStyle={[styles.image]} />
         </View>
 
         {/* Title */}
-        <CustomText text="Buffalo Burger" textStyle={styles.title} />
+        <CustomText text="Buffalo Burger" textStyle={[styles.title]} />
 
         {/* Info Row */}
         <View style={styles.infoContainer}>
-          <CustomText text="Nov 21, 2025 • Total Bill:" textStyle={styles.date} />
-          <CustomText text="850.00 EGP" textStyle={styles.price} />
+          <CustomText text="Nov 21, 2025 • Total Bill:" textStyle={[styles.date]} />
+          <CustomText text="850.00 EGP" textStyle={[styles.price]} />
         </View>
 
         {/* Payment Receiver */}

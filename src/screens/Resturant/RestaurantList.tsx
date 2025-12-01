@@ -1,5 +1,5 @@
 import { Colors } from "@/src/constants/colors";
-import { Restaurant } from "@/src/services/api/Endpoints/RestaurantEndpoints";
+import { Restaurant } from "@/src/services/api/endpoints/restaurantEndpoints";
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { RestaurantCard } from "./RestaurantCard";

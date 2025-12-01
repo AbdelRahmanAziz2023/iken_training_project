@@ -1,4 +1,3 @@
-import baseApi from "../baseApi";
 import {
   ChangePasswordBody,
   ChangePasswordResponse,
@@ -7,7 +6,8 @@ import {
   UpdateProfileBody,
   User,
   UserResponse,
-} from "./../../../types/Auth.type";
+} from "../../../types/auth.type";
+import baseApi from "../baseApi";
 
 const AuthEndpoints = baseApi.injectEndpoints({
   endpoints: (builder) => ({

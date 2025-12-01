@@ -2,7 +2,7 @@ import CustomError from "@/src/components/common/CustomError";
 import CustomHint from "@/src/components/common/CustomHint";
 import MenuItemCardSkeletonList from "@/src/components/skeleton/MenuItemCardSkeletonList";
 import { Colors } from "@/src/constants/colors";
-import { useGetRestaurantMenuQuery } from "@/src/services/api/Endpoints/RestaurantEndpoints";
+import { useGetRestaurantMenuQuery } from "@/src/services/api/endpoints/restaurantEndpoints";
 import { setRestaurant } from "@/src/store/slices/cartSlice";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";

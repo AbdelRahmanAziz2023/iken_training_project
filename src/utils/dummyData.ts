@@ -1,4 +1,4 @@
-import { ActiveCartData } from "@/src/types/Cart.type";
+import { ActiveCartData } from "@/src/types/cart.type";
 
 export const dummyActiveCart: ActiveCartData = {
   cartId: "12345",

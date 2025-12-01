@@ -2,7 +2,7 @@ import CustomButton from "@/src/components/common/CustomButton";
 import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
 import getStatusBadgeStyle from "@/src/helper/getStatusBadgeStyle";
-import { ActiveCartData } from "@/src/types/Cart.type";
+import { ActiveCartData } from "@/src/types/cart.type";
 import { dummyActiveCart } from "@/src/utils/dummyData";
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";

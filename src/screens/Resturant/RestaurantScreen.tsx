@@ -1,7 +1,7 @@
 import CustomError from "@/src/components/common/CustomError";
 import RestaurantCardSkeletonList from "@/src/components/skeleton/RestaurantCardSkeletonList";
 import { Colors } from "@/src/constants/colors";
-import { useGetRestaurantsQuery } from "@/src/services/api/Endpoints/RestaurantEndpoints";
+import { useGetRestaurantsQuery } from "@/src/services/api/endpoints/restaurantEndpoints";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";

@@ -27,11 +27,12 @@ export default function HomeLayout() {
       />
       <Stack.Screen name="Menu" options={{ headerTitle: "Menu" }} />
 
-      <Stack.Screen name="PaymentTracker" options={{ headerTitle: "Payment Tracker" }} />
+      <Stack.Screen
+        name="PaymentTracker"
+        options={{ headerTitle: "Payment Tracker" }}
+      />
 
       <Stack.Screen name="Receipt" options={{ headerTitle: "Receipt" }} />
-
-      <Stack.Screen name="Cart" options={{ headerTitle: "Cart" }} />
     </Stack>
   );
 }

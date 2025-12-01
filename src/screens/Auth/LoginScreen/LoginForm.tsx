@@ -1,6 +1,6 @@
 import CustomButton from "@/src/components/common/CustomButton";
 import CustomTextField from "@/src/components/common/CustomTextField";
-import { useLoginMutation } from "@/src/services/api/Endpoints/AuthEndpoints";
+import { useLoginMutation } from "@/src/services/api/endpoints/authEndpoints";
 import { saveToken, saveUser } from "@/src/store/expo-secure-store";
 import { validateLogInInput } from "@/src/utils/validation";
 import { useRouter } from "expo-router";

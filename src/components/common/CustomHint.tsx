@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 6,
     borderWidth: 1,
+    marginVertical:10,
     borderColor: "rgba(255, 183, 77, 0.3)",
   },
   hintText: {

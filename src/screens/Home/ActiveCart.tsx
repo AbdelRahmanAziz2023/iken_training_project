@@ -2,25 +2,33 @@ import CustomButton from "@/src/components/common/CustomButton";
 import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
 import getStatusBadgeStyle from "@/src/helper/getStatusBadgeStyle";
+import { ActiveCartData } from "@/src/types/Cart.type";
+import { dummyActiveCart } from "@/src/utils/dummyData";
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
 
-const ActiveCart = () => {
+interface ActiveCartProps {
+  cartData?: ActiveCartData;
+}
+
+const ActiveCart: React.FC<ActiveCartProps> = ({ cartData = dummyActiveCart }) => {
   const router = useRouter();
 
   const handleGoToCart = () => {
     router.push({
       pathname: "/(app)/(home)/OrderDetails",
-      params: { cartId: "12345" },
+      params: { cartId: cartData.cartId },
     });
   };
+
+  const statusText = cartData.status.charAt(0).toUpperCase() + cartData.status.slice(1);
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.header}>
         <CustomText text="Active Cart" textStyle={[styles.title]} />
-        <View style={[styles.statusBadge, getStatusBadgeStyle("opened")]}>
-          <CustomText text="Opened" textStyle={[styles.statusText]} />
+        <View style={[styles.statusBadge, getStatusBadgeStyle(cartData.status)]}>
+          <CustomText text={statusText} textStyle={[styles.statusText]} />
         </View>
       </View>
 
@@ -29,22 +37,22 @@ const ActiveCart = () => {
           <View style={styles.imageContainer}>
             <Image
               source={{
-                uri: "https://thumbs.dreamstime.com/b/restaurant-logo-design-idea-chef-hat-fork-graphic-leaf-shape-food-drinks-symbol-concept-cooking-eating-vector-template-173237325.jpg",
+                uri: cartData.restaurant.image,
               }}
               style={styles.image}
             />
           </View>
 
           <View style={styles.textGroup}>
-            <CustomText text="MacDonald's" textStyle={[styles.cartTitle]} />
-            <CustomText text="Hosted by Saleh" textStyle={[styles.hostText]} />
-            <CustomText text="Participants: 3" textStyle={[styles.hostText]} />
+            <CustomText text={cartData.restaurant.name} textStyle={[styles.cartTitle]} />
+            <CustomText text={`Hosted by ${cartData.restaurant.hostedBy}`} textStyle={[styles.hostText]} />
+            <CustomText text={`Participants: ${cartData.participantsCount}`} textStyle={[styles.hostText]} />
           </View>
         </View>
 
         <View style={styles.rightWrapper}>
           <CustomText text="Your Total" textStyle={[styles.totalLabel]} />
-          <CustomText text="100 EGP" textStyle={[styles.totalValue]} />
+          <CustomText text={`${cartData.totalPrice} EGP`} textStyle={[styles.totalValue]} />
 
           <CustomButton
             title="Go To Cart →"

@@ -1,7 +1,8 @@
-import CustomNote from "@/src/components/common/CustomNote";
-import React from "react";
+import CustomHint from "@/src/components/common/CustomHint";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import DeliveryFeePopup from "./DeliveryFeePopup";
+import DeliveryPaymentSection from "./DeliveryPaymentSection";
+import MembersRow from "./MembersRow";
 import OrderActions from "./OrderActions";
 import OrderHeader from "./OrderHeader";
 import OrderList from "./OrderList";
@@ -27,57 +28,53 @@ const dummyOrders = [
 ];
 
 const OrderDetailsScreen = () => {
-  // -------------------
-  // ORDER STATUS STATE,, will handle it after backend
-  // -------------------
-  const [status, setStatus] = React.useState("opened");
-  // placed | locked | opened
+  const [status, setStatus] = React.useState("locked");
 
-  const isPlaced = status === "placed";
+  // keep orders in local state so participant can "leave" in demo
+  const [ordersState, setOrdersState] = useState(dummyOrders);
+
   const isLocked = status === "locked";
   const isOpened = status === "opened";
-  const isCreator = false; // to be handled with backend
 
-  // -------------------
-  // DELIVERY FEE POPUP,, still working on it
-  // -------------------
-  const [deliveryFee, setDeliveryFee] = React.useState("0");
-  const [deliveryPopupVisible, setDeliveryPopupVisible] = React.useState(false);
+  const isCreator = ordersState.some((o) => o.isYou === false);
 
-  const subtotal = dummyOrders
+  const subtotal = ordersState
     .flatMap((o) => o.items)
     .reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <>
-      <DeliveryFeePopup
-        visible={deliveryPopupVisible}
-        fee={deliveryFee}
-        onClose={() => setDeliveryPopupVisible(false)}
-        onConfirm={(val) => {
-          setDeliveryFee(val);
-          setDeliveryPopupVisible(false);
-        }}
-      />
-      <ScrollView style={styles.container}>
-        <View style={styles.card}>
-          <OrderHeader />
-          <OrderList orders={dummyOrders} isOpened={isOpened} />
-          <OrderTotals subtotal={subtotal} />
+    <ScrollView style={styles.container}>
+      <View style={styles.card}>
+        <OrderHeader status={status} />
 
-          {isCreator && isOpened && <CustomNote note="Note: Some notes" onClear={() => {}} />}
+        {/* members row */}
+        <MembersRow
+          status={status}
+          setStatus={setStatus}
+          isHost={isCreator}
+          membersCount={ordersState.length}
+        />
 
-          <OrderActions
-            isOpened={isOpened}
-            isLocked={isLocked}
-            isPlaced={isPlaced}
-            isCreator={isCreator}
-            onCheckoutPress={() => setDeliveryPopupVisible(true)}
-            onChangeStatus={setStatus}
+        <OrderList
+          orders={ordersState}
+          {...({ isOpened, isLocked, isCreator } as any)}
+        />
+        {isLocked && isCreator && <DeliveryPaymentSection />}
+        <OrderTotals subtotal={subtotal} />
+        {!isCreator && (
+          <CustomHint
+            message={isOpened ? "Waiting for Host to lock order..." : "Host is finalizing the order..."}
           />
-        </View>
-      </ScrollView>
-    </>
+        )}
+        {/* host inputs when locked */}
+        <OrderActions
+          isOpened={isOpened}
+          isLocked={isLocked}
+          isCreator={isCreator}
+          onChangeStatus={setStatus}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -96,6 +93,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#f0f0f0",
   },
+  membersRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
+  },
+  /* membersRow styles moved to `MembersRow.tsx` */
 });
 
 export default OrderDetailsScreen;

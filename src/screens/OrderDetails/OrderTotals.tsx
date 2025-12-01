@@ -6,23 +6,23 @@ const OrderTotals = ({ subtotal, deliveryFee=0 }: { subtotal: number; deliveryFe
   return (
     <View style={styles.totalsSection}>
       <View style={styles.row}>
-        <CustomText text="Subtotal" textStyle={styles.totalLabel} />
-        <CustomText text={`${subtotal.toFixed(2)} EGP`} textStyle={styles.price} />
+        <CustomText text="Subtotal" textStyle={[styles.totalLabel]} />
+        <CustomText text={`${subtotal.toFixed(2)} EGP`} textStyle={[styles.price]} />
       </View>
 
      <View style={styles.row}>
-  <CustomText text="Delivery Fee" textStyle={styles.totalLabel} />
+  <CustomText text="Delivery Fee" textStyle={[styles.totalLabel]} />
   <CustomText
     text={`${Number(deliveryFee).toFixed(2)} EGP`}
-    textStyle={styles.price}
+    textStyle={[styles.price]}
   />
 </View>
 
 <View style={styles.row}>
-  <CustomText text="Total" textStyle={styles.totalLabel} />
+  <CustomText text="Total" textStyle={[styles.totalLabel]} />
   <CustomText
     text={`${(subtotal + Number(deliveryFee)).toFixed(2)} EGP`}
-    textStyle={styles.price}
+    textStyle={[styles.price]}
   />
 </View>
 

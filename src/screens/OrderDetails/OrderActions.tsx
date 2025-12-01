@@ -7,9 +7,8 @@ import { StyleSheet } from "react-native";
 const OrderActions = ({
   isOpened,
   isLocked,
-  isPlaced,
+ 
   isCreator,
-  onCheckoutPress,
   onChangeStatus,
 }: any) => {
   return (
@@ -22,42 +21,16 @@ const OrderActions = ({
             btnStyle={styles.addBtn}
             Icon={Icons.plus}
           />
-
-          <CustomButton
-            title={isCreator ? "Cancel Order" : "Leave Order"}
-            btnStyle={styles.leaveBtn}
-            Icon={isCreator ? Icons.cross : Icons.logout}
-            onPress={() => onChangeStatus("placed")}
-          />
         </>
       )}
 
       {/* -------------------- LOCKED -------------------- */}
       {isLocked && isCreator && (
-        <>
           <CustomButton
-            title="Open Order"
-            btnStyle={styles.addBtn}
-            Icon={Icons.plus}
-            onPress={() => onChangeStatus("opened")}
-          />
-
-          <CustomButton
-            title="Checkout"
+            title="Place Order"
             btnStyle={styles.leaveBtn}
             Icon={Icons.check}
-            onPress={onCheckoutPress}
           />
-        </>
-      )}
-
-      {/* -------------------- PLACED -------------------- */}
-      {isPlaced && isCreator && (
-        <CustomButton
-          title="Payment"
-          btnStyle={styles.leaveBtn}
-          Icon={Icons.creditCard}
-        />
       )}
     </>
   );

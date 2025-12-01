@@ -1,41 +1,69 @@
 import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const OrderList = ({ orders, isOpened }: { orders: any[]; isOpened: boolean }) => {
+type Order = {
+  name: string;
+  items: { label: string; price: number }[];
+  isYou?: boolean;
+};
+
+const OrderList = ({ orders }: { orders: Order[] }) => {
+  const [expanded, setExpanded] = useState<{ [key: number]: boolean }>({});
+
+  const toggle = (i: number) => setExpanded((s) => ({ ...s, [i]: !s[i] }));
+
+  const totals = useMemo(
+    () => orders.map((o) => o.items.reduce((s, it) => s + it.price, 0)),
+    [orders]
+  );
+
+  const itemCounts = useMemo(() => orders.map((o) => o.items.length), [orders]);
+
   return (
     <>
-      {orders.map((order, index) => (
-        <View key={index} style={styles.orderBlock}>
-          <Text style={[styles.name, order.isYou && { color: Colors.red }]}>
-            {order.name}
-          </Text>
+      {orders.map((order, index) => {
+        const isYou = !!order.isYou;
+        const isExpanded = !!expanded[index];
+        return (
+          <View key={index} style={styles.card}>
+            <Pressable style={styles.rowHeader} onPress={() => toggle(index)}>
+              <View style={styles.left}>
+                <Text
+                  style={[styles.name, isYou && { color: Colors.red }]}
+                  numberOfLines={1}
+                >
+                  {order.name}
+                </Text>
+                <Text style={styles.meta}>{itemCounts[index]} items</Text>
+              </View>
 
-          {order.items.map((item: any, idx: number) => (
-            <View key={idx} style={styles.row}>
-              <CustomText text={item.label} textStyle={styles.itemText} />
-              <CustomText text={`${item.price.toFixed(2)} EGP`} textStyle={styles.price} />
-            </View>
-          ))}
+              <View style={styles.right}>
+                <Text style={styles.total}>{totals[index].toFixed(2)} EGP</Text>
+                <Text style={styles.chev}>{isExpanded ? "▾" : "▸"}</Text>
+              </View>
+            </Pressable>
 
-          {order.isYou && isOpened && (
-            <View style={styles.actionsRow}>
-              <Pressable>
-                <CustomText text="Edit" textStyle={styles.edit} />
-              </Pressable>
-
-              <Pressable>
-                <CustomText text="Delete" textStyle={styles.delete} />
-              </Pressable>
-            </View>
-          )}
-
-          {index !== orders.length - 1 && (
-            <View style={styles.separator} />
-          )}
-        </View>
-      ))}
+            {isExpanded && (
+              <View style={styles.expandedContent}>
+                {order.items.map((item, idx) => (
+                  <View key={idx} style={styles.itemRow}>
+                    <CustomText
+                      text={item.label}
+                      textStyle={[styles.itemText]}
+                    />
+                    <CustomText
+                      text={`${item.price.toFixed(2)} EGP`}
+                      textStyle={[styles.price]}
+                    />
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        );
+      })}
     </>
   );
 };
@@ -43,32 +71,41 @@ const OrderList = ({ orders, isOpened }: { orders: any[]; isOpened: boolean }) =
 export default OrderList;
 
 const styles = StyleSheet.create({
-  orderBlock: {
-    marginBottom: 16,
+  card: {
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  name: {
-    fontSize: 18,
-    fontFamily: "SenBold",
-    marginBottom: 8,
-  },
-  row: {
+  rowHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 6,
+    alignItems: "center",
   },
-  itemText: { fontSize: 16 },
-  price: { fontFamily: "SenBold" },
-  actionsRow: {
-    flexDirection: "row",
-    gap: 16,
-    marginTop: 6,
-  },
-  edit: { color: Colors.mustard, fontSize: 14, fontWeight: "600" },
-  delete: { color: Colors.lightred, fontSize: 14, fontWeight: "600" },
-  separator: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
+  left: { flex: 1, paddingRight: 8 },
+  right: { alignItems: "flex-end" },
+  name: { fontSize: 16, fontFamily: "SenBold", color: Colors.textPrimary },
+  meta: { fontSize: 12, color: Colors.textMuted, marginTop: 2 },
+  total: { fontSize: 14, fontFamily: "SenBold", color: Colors.textPrimary },
+  chev: { fontSize: 18, color: Colors.textMuted, marginTop: 4 },
+  expandedContent: {
     marginTop: 12,
-    marginBottom: 10,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+    paddingTop: 12,
   },
+  itemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  itemText: { fontSize: 14 },
+  price: { fontFamily: "SenBold" },
 });

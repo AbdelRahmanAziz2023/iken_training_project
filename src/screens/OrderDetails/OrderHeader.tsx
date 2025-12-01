@@ -4,13 +4,17 @@ import getStatusBadgeStyle from "@/src/helper/getStatusBadgeStyle";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-const OrderHeader = () => {
+type Props = {
+  status:string;
+};
+
+const OrderHeader = ({status}: Props) => {
   return (
     <View style={styles.headerRow}>
-      <CustomText text="Order Details" textStyle={styles.header} />
+      <CustomText text="Order Details" textStyle={[styles.header]} />
 
-      <View style={[styles.statusBadge, getStatusBadgeStyle("opened")]}>
-        <CustomText text="Opened" textStyle={styles.statusText} />
+      <View style={[styles.statusBadge, getStatusBadgeStyle(status)]}>
+        <CustomText text={status} textStyle={[styles.statusText]} />
       </View>
     </View>
   );

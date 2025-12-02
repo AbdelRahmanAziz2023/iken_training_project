@@ -1,5 +1,13 @@
+import { useTogglePaidStatusMutation } from "@/src/services/api/endpoints/orderEndpoints";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 type Participant = {
   id: string;
@@ -11,42 +19,82 @@ type Participant = {
 };
 
 const participantsData: Participant[] = [
-  { id: "1", name: "You (Host)", initials: "YO", amount: 260, status: "host", autoPaid: true },
-  { id: "2", name: "Sarah Ahmed", initials: "SA", amount: 150, status: "unpaid" },
-  { id: "3", name: "Mohamed Khaled", initials: "MK", amount: 170, status: "unpaid" },
+  {
+    id: "1",
+    name: "You (Host)",
+    initials: "YO",
+    amount: 260,
+    status: "host",
+    autoPaid: true,
+  },
+  {
+    id: "2",
+    name: "Sarah Ahmed",
+    initials: "SA",
+    amount: 150,
+    status: "unpaid",
+  },
+  {
+    id: "3",
+    name: "Mohamed Khaled",
+    initials: "MK",
+    amount: 170,
+    status: "unpaid",
+  },
   { id: "4", name: "Omar", initials: "OM", amount: 270, status: "unpaid" },
 ];
 
-type Props = { calculateTotal: (amount: number) => void };
+type Props = {
+  calculateTotal: (amount: number) => void;
+  participants?: Participant[];
+  skipInitialHostAutoPaid?: boolean;
+};
 
-const PaymentList = ({ calculateTotal }: Props) => {
+const PaymentList = ({ calculateTotal, participants, skipInitialHostAutoPaid }: Props) => {
+  const list = participants && participants.length ? participants : participantsData;
+
   const [toggles, setToggles] = useState<{ [key: string]: boolean }>(() =>
-    participantsData.reduce((acc, p) => {
+    list.reduce((acc, p) => {
       if (p.status !== "host") acc[p.id] = p.status === "paid";
       return acc;
     }, {} as { [key: string]: boolean })
   );
 
-  // Host auto-paid amount
+  const [togglePaid, { isLoading }] = useTogglePaidStatusMutation();
+
+  // Host auto-paid amount (run once)
   useEffect(() => {
-    const host = participantsData.find((p) => p.autoPaid);
-    if (host) calculateTotal(host.amount);
+    if (skipInitialHostAutoPaid) return;
+    const host = list.find((p) => p.autoPaid || p.status === "host");
+    if (host && host.autoPaid) {
+      calculateTotal(host.amount);
+    }
+    // we only want to run this on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleSwitch = useCallback(
-    (id: string) => {
-      const participant = participantsData.find((p) => p.id === id);
+    async (id: string) => {
+      const participant = list.find((p) => p.id === id);
       if (!participant) return;
 
-      const isCurrentlyPaid = toggles[id];
+      const isCurrentlyPaid = !!toggles[id];
 
-      // Update total
-      calculateTotal(isCurrentlyPaid ? -participant.amount : participant.amount);
+      try {
+        // await mutation and unwrap to throw on error
+        await togglePaid({ userId: id, isPaid: !isCurrentlyPaid }).unwrap();
 
-      // Toggle state
-      setToggles((prev) => ({ ...prev, [id]: !isCurrentlyPaid }));
+        // Update total
+        calculateTotal(isCurrentlyPaid ? -participant.amount : participant.amount);
+
+        // Toggle state
+        setToggles((prev) => ({ ...prev, [id]: !isCurrentlyPaid }));
+      } catch (error) {
+        console.log("Error toggling paid status:", error);
+        Alert.alert("Error", "Failed to update payment status. Please try again.");
+      }
     },
-    [toggles]
+    [toggles, list, togglePaid, calculateTotal]
   );
 
   const renderItem = ({ item }: { item: Participant }) => {
@@ -97,7 +145,10 @@ const PaymentList = ({ calculateTotal }: Props) => {
 
           {!isHost && (
             <Pressable
-              style={[styles.toggle, isPaid ? styles.toggleOn : styles.toggleOff]}
+              style={[
+                styles.toggle,
+                isPaid ? styles.toggleOn : styles.toggleOff,
+              ]}
               onPress={() => toggleSwitch(item.id)}
             >
               <View
@@ -115,7 +166,7 @@ const PaymentList = ({ calculateTotal }: Props) => {
 
   return (
     <FlatList
-      data={participantsData}
+      data={list}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       ItemSeparatorComponent={() => <View style={{ height: 12 }} />}

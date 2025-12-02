@@ -14,7 +14,7 @@ const MenuItem = ({ icon: Icon, title, onPress, iconStroke }: Props) => {
   return (
     <Pressable style={styles.menuItem} onPress={onPress}>
       <Icon width={24} height={24} stroke={iconStroke} />
-      <CustomText text={title} textStyle={styles.menuText} />
+      <CustomText text={title} textStyle={[styles.menuText]} />
       <Icons.arrow width={20} height={20} />
     </Pressable>
   );

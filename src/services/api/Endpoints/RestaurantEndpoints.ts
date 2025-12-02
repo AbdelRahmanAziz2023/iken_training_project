@@ -31,4 +31,5 @@ const RestaurantEndpoints = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetRestaurantsQuery, useGetRestaurantMenuQuery } = RestaurantEndpoints;
+export const { useGetRestaurantsQuery, useGetRestaurantMenuQuery } =
+  RestaurantEndpoints;

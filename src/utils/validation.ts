@@ -65,3 +65,17 @@ export const validateSignUpInput = (
   }
   return true;
 };
+
+export const validatePasscode = (passcode: string): boolean => {
+  const code = passcode.trim();
+  // Must be exactly 6 characters, uppercase letters A-Z and digits 0-9 only
+  const re = /^[A-Z0-9]{6}$/;
+  if (!re.test(code)) {
+    Alert.alert(
+      "Invalid Passcode",
+      "Passcode must be exactly 6 characters and contain only uppercase letters (A-Z) and numbers."
+    );
+    return false;
+  }
+  return true;
+};

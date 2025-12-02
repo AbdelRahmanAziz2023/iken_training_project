@@ -45,6 +45,12 @@ const AuthEndpoints = baseApi.injectEndpoints({
         body: changePasswordBody,
       }),
     }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: "auth/logout",
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -54,4 +60,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useChangePasswordMutation,
+  useLogoutMutation,
 } = AuthEndpoints;

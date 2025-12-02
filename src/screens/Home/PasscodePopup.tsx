@@ -2,9 +2,14 @@ import CustomButton from "@/src/components/common/CustomButton";
 import CustomText from "@/src/components/common/CustomText";
 import CustomTextField from "@/src/components/common/CustomTextField";
 import { Colors } from "@/src/constants/colors";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { usePasscodeModal } from "@/src/hooks/usePasscodeModal";
+import {
+  ActivityIndicator,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 type Props = {
   isVisible: boolean;
@@ -12,19 +17,11 @@ type Props = {
 };
 
 const PasscodePopup = ({ isVisible = false, onClose }: Props) => {
-  const router = useRouter();
-  const [passcode, setPasscode] = useState("");
-
-  const handleSubmit = () => {
-    router.push({
-      pathname: "/(app)/(home)/OrderDetails",
-      params: { orderId:""},
-    });
-    handleClose();
-  };
+  const { passcode, setPasscode, isLoading, handleSubmit, resetForm } =
+    usePasscodeModal();
 
   const handleClose = () => {
-    setPasscode("");
+    resetForm();
     onClose();
   };
 
@@ -46,10 +43,19 @@ const PasscodePopup = ({ isVisible = false, onClose }: Props) => {
             onChangeText={setPasscode}
           />
 
+          {isLoading && (
+            <ActivityIndicator
+              size="small"
+              color={Colors.red}
+              style={{ marginTop: 12 }}
+            />
+          )}
+
           <CustomButton
-            title="Submit"
+            title={isLoading ? "Joining..." : "Submit"}
             btnStyle={styles.submitButton}
             onPress={handleSubmit}
+            isDisabled={isLoading}
           />
 
           <TouchableOpacity onPress={handleClose}>
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
   submitButton: {
     width: "50%",
     marginTop: 20,
-    backgroundColor:Colors.red
+    backgroundColor: Colors.red,
   },
 
   closeText: {

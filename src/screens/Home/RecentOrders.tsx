@@ -1,9 +1,11 @@
+import CustomError from "@/src/components/common/CustomError";
 import CustomText from "@/src/components/common/CustomText";
-import OrderItem from "@/src/components/order/OrderItem";
+import OrdersList from "@/src/components/order/OrdersList";
 import OrderItemSkeletonList from "@/src/components/skeleton/OrderItemSkeletonList";
 import { Colors } from "@/src/constants/colors";
+import { useGetOrdersHistoryQuery } from "@/src/services/api/endpoints/orderEndpoints";
 import { useRouter } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 export const orders = [
   {
@@ -51,7 +53,8 @@ export const orders = [
 const RecentOrders = () => {
   const router = useRouter();
 
-  const isLoading = false;
+  const { data, isLoading, isError } = useGetOrdersHistoryQuery(5);
+
   const onPress = () => {
     router.push("/(app)/(home)/OrderHistory");
   };
@@ -67,14 +70,13 @@ const RecentOrders = () => {
         </Pressable>
       </View>
 
-      {isLoading?<OrderItemSkeletonList/>:<FlatList
-        data={orders}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <OrderItem item={item} />}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ordersList}
-        scrollEnabled={false}
-      />}
+      {isLoading ? (
+        <OrderItemSkeletonList />
+      ) : !isError ? (
+        <CustomError title="Error" message="Failed to load recent orders" />
+      ) : (
+        <OrdersList data={orders} />
+      )}
     </View>
   );
 };
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
   ordersContainer: {
     marginTop: 20,
     gap: 10,
+    paddingBottom: 120,
   },
   header: {
     flexDirection: "row",
@@ -97,11 +100,6 @@ const styles = StyleSheet.create({
   headerTextBtn: {
     fontFamily: "SenSemiBold",
     color: Colors.mustard,
-  },
-  ordersList: {
-    padding: 10,
-    paddingBottom: 150,
-    gap: 10,
   },
 });
 

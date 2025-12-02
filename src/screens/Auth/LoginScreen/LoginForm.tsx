@@ -1,35 +1,13 @@
 import CustomButton from "@/src/components/common/CustomButton";
 import CustomTextField from "@/src/components/common/CustomTextField";
-import { useLoginMutation } from "@/src/services/api/endpoints/authEndpoints";
-import { saveToken, saveUser } from "@/src/store/expo-secure-store";
-import { validateLogInInput } from "@/src/utils/validation";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { useLogin } from "@/src/hooks/useLogin";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import AuthFoot from "../AuthFoot";
 
-
 const LoginForm = () => {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [login, { isLoading }] = useLoginMutation();
-
-  const handleLogin = async () => {
-    if (!validateLogInInput(email, password)) return;
-    try {
-      const res = await login({ email, password }).unwrap();
-      // Store token and user data
-      await saveToken(res.token);
-      await saveUser({ id: res.id, fullName: res.fullName, email: res.email });
-      router.replace("/(app)/(home)");
-    } catch (err) {
-      Alert.alert("Error", "Invalid email or password");
-      setEmail("");
-      setPassword("");
-      console.log("LOGIN ERROR:", err);
-    }
-  };
+  const { email, setEmail, password, setPassword, isLoading, handleLogin } =
+    useLogin();
 
   return (
     <View style={styles.card}>

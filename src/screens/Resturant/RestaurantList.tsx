@@ -1,7 +1,9 @@
+import CustomEmptyList from "@/src/components/common/CustomEmptyList";
+import CustomText from "@/src/components/common/CustomText";
 import { Colors } from "@/src/constants/colors";
 import { Restaurant } from "@/src/services/api/endpoints/restaurantEndpoints";
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { RestaurantCard } from "./RestaurantCard";
 
 interface RestaurantListProps {
@@ -24,18 +26,13 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
   const header = () => {
     return (
       <View style={styles.header}>
-        <Text style={styles.subtitle}>
-          {restaurants.length} restaurants available
-        </Text>
+        <CustomText
+          text={`${restaurants.length} restaurants available`}
+          textStyle={[styles.subtitle]}
+        />
       </View>
     );
   };
-
-  const renderEmpty = () => (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No restaurants found</Text>
-    </View>
-  );
 
   return (
     <FlatList
@@ -43,7 +40,12 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
       renderItem={renderItem}
       keyExtractor={(item) => item.id.toString()}
       contentContainerStyle={styles.listContent}
-      ListEmptyComponent={renderEmpty}
+      ListEmptyComponent={
+        <CustomEmptyList
+          title="No Restaurants Found"
+          message="Sorry, there are no restaurants available at the moment."
+        />
+      }
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={header}
     />
@@ -54,27 +56,16 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 32,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 64,
-  },
-  emptyText: {
-    fontSize: 16,
-    fontFamily: "SenRegular",
-    color: Colors.textMuted,
-  },
-    header: {
+  header: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderColor: Colors.gray300,
     marginBottom: 12,
   },
-    subtitle: {
+  subtitle: {
     fontSize: 16,
-    fontFamily: 'SenRegular',
+    fontFamily: "SenRegular",
     color: Colors.textMuted,
   },
 });

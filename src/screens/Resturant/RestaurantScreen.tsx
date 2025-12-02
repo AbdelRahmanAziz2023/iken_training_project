@@ -15,21 +15,6 @@ const RestaurantScreen: React.FC = () => {
     isError,
   } = useGetRestaurantsQuery();
 
-  if (isLoading) {
-    return <RestaurantCardSkeletonList />;
-  }
-
-  if (isError) {
-    return (
-      <View style={styles.centerContainer}>
-      <CustomError
-        title="Error"
-        message="Failed to load restaurants. Please try again."
-      />
-    </View>
-    );
-  }
-
   const handleRestaurantPress = (restaurant: { id: number; name: string }) => {
     router.push({
       pathname: "/(app)/(home)/Menu",
@@ -42,10 +27,19 @@ const RestaurantScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <RestaurantList
-        restaurants={restaurants}
-        onRestaurantPress={handleRestaurantPress}
-      />
+      {isLoading ? (
+        <RestaurantCardSkeletonList />
+      ) : !isError ? (
+        <CustomError
+          title="Error"
+          message="Failed to load restaurants. Please try again."
+        />
+      ) : (
+        <RestaurantList
+          restaurants={restaurants}
+          onRestaurantPress={handleRestaurantPress}
+        />
+      )}
     </View>
   );
 };
@@ -54,32 +48,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+    paddingTop: 20,
     paddingBottom: 80,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.background,
-  },
-  title: {
-    fontSize: 32,
-    fontFamily: "SenBold",
-    color: Colors.textPrimary,
-    marginBottom: 4,
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    fontFamily: "SenRegular",
-    color: Colors.textMuted,
-  },
-  errorText: {
-    fontSize: 16,
-    fontFamily: "SenRegular",
-    color: Colors.red,
-    textAlign: "center",
-    paddingHorizontal: 32,
   },
 });
 

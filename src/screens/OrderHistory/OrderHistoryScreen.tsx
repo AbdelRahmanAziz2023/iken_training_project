@@ -1,25 +1,23 @@
-import CustomText from "@/src/components/common/CustomText";
+import CustomError from "@/src/components/common/CustomError";
+import OrdersList from "@/src/components/order/OrdersList";
+import OrderItemSkeletonList from "@/src/components/skeleton/OrderItemSkeletonList";
 import { Colors } from "@/src/constants/colors";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useGetOrdersHistoryQuery } from "@/src/services/api/endpoints/orderEndpoints";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderHistoryScreen = () => {
+  const { data, isLoading, isError } = useGetOrdersHistoryQuery(10);
 
   return (
     <SafeAreaView style={styles.container}>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.emptyState}>
-          <CustomText
-            text="No orders yet"
-            textStyle={styles.emptyText}
-          />
-          <CustomText
-            text="Your order history will appear here"
-            textStyle={styles.emptySubtext}
-          />
-        </View>
-      </ScrollView>
+      {isError ? (
+        <CustomError title="Error" message="Failed to load order history" />
+      ) : isLoading ? (
+        <OrderItemSkeletonList />
+      ) : (
+        <OrdersList data={data} />
+      )}
     </SafeAreaView>
   );
 };

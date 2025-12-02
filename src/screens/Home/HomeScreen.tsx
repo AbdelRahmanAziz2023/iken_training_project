@@ -1,5 +1,7 @@
+import CustomError from "@/src/components/common/CustomError";
 import ActiveCartSkeleton from "@/src/components/skeleton/ActiveCartSkeleton";
 import { Colors } from "@/src/constants/colors";
+import { useGetActiveCartQuery } from "@/src/services/api/endpoints/cartEndpoints";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
@@ -15,8 +17,8 @@ const HomeScreen = () => {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
 
-  const isActiveCart = true;
-  const isLoading = false;
+  const { data, isLoading, isError } = useGetActiveCartQuery();
+  const isActiveCart = data ? true : false;
 
   const showPasscodePopup = () => {
     setIsVisible(true);
@@ -41,7 +43,9 @@ const HomeScreen = () => {
         />
         {isLoading ? (
           <ActiveCartSkeleton />
-        ) : !isActiveCart ? (
+        ) : !isError ? (
+          <CustomError title="Error" message="Failed to load active cart" />
+        ) : isActiveCart ? (
           <ActiveCartPlaceholder />
         ) : (
           <ActiveCart />

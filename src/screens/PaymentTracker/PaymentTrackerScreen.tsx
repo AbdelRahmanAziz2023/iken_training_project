@@ -1,5 +1,7 @@
-import CustomText from "@/src/components/common/CustomText";
+import CustomError from "@/src/components/common/CustomError";
+import PaymentTrackerSkeleton from "@/src/components/skeleton/PaymentTrackerSkeleton";
 import { Colors } from "@/src/constants/colors";
+import { useGetTrackerQuery } from "@/src/services/api/endpoints/orderEndpoints";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -7,43 +9,51 @@ import ParticipantsHeader from "./ParticipantsHeader";
 import PaymentList from "./PaymentList";
 import PaymentProgress from "./PaymentProgress";
 import PaymentReceiver from "./PaymentReceiver";
+import PaymentTrackerHeader from "./PaymentTrackerHeader";
 
 type Props = {};
 
 const PaymentTrackerScreen = ({}: Props) => {
+  const [collectedAmount, setCollectedAmount] = useState<number>(0);
+  const calculateCollected = (amount: number): void => {
+    setCollectedAmount((prev) => prev + amount);
+  };
 
-    const [collectedAmount,setCollectedAmount]=useState<number>(0);
-    const calculateCollected=(amount:number):void=>{
-       setCollectedAmount(prev=>prev+amount);
-    }
+  const { orderId } = useLocalSearchParams<{ orderId: string }>();
 
-    const {orderId}=useLocalSearchParams<{orderId:string}>();
+  const { isLoading, isError } = useGetTrackerQuery(orderId);
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer} style={styles.container}>
-      <View style={styles.dataSection}>
-        {/* Image */}
-        <View style={styles.imageContainer}>
-          <CustomText text="💰" textStyle={[styles.image]} />
-        </View>
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      style={styles.container}
+    >
+      {isLoading ? (
+        <PaymentTrackerSkeleton />
+      ) : !isError ? (
+        <CustomError
+          title="Error"
+          message="Failed to load payment tracker. Please try again."
+        />
+      ) : (
+        <>
+          <View style={styles.dataSection}>
+            <PaymentTrackerHeader
+              restaurantName={"Buffalo Burger"}
+              orderDate={"Nov 21, 2025 • Total Bill:"}
+              orderTotal={850}
+            />
 
-        {/* Title */}
-        <CustomText text="Buffalo Burger" textStyle={[styles.title]} />
+            {/* Payment Receiver */}
+            <PaymentReceiver />
 
-        {/* Info Row */}
-        <View style={styles.infoContainer}>
-          <CustomText text="Nov 21, 2025 • Total Bill:" textStyle={[styles.date]} />
-          <CustomText text="850.00 EGP" textStyle={[styles.price]} />
-        </View>
-
-        {/* Payment Receiver */}
-        <PaymentReceiver />
-
-        {/* Payment Progress */}
-        <PaymentProgress collected={collectedAmount} total={850} />
-      </View>
-      <ParticipantsHeader count={5}/>
-      <PaymentList calculateTotal={calculateCollected}/>
+            {/* Payment Progress */}
+            <PaymentProgress collected={collectedAmount} total={850} />
+          </View>
+          <ParticipantsHeader count={5} />
+          <PaymentList calculateTotal={calculateCollected} />
+        </>
+      )}
     </ScrollView>
   );
 };

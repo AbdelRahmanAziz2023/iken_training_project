@@ -1,20 +1,11 @@
-import { getToken } from "@/src/store/expo-secure-store";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQueryWithReauth";
 
-const baseApi = createApi({
+export const baseApi = createApi({
   reducerPath: "baseApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.mahmoud-osama.com/api/",
-    prepareHeaders: async (headers) => {
-      const token = await getToken();
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({}),
 });
 
+// export hooks from other endpoints (authApi will inject endpoints)
 export default baseApi;

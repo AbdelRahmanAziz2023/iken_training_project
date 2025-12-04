@@ -28,7 +28,7 @@ const CustomButton = ({
     >
       <View style={styles.content}>
         {Icon && <Icon style={styles.iconWrapper} />}
-        <CustomText text={title} textStyle={!textStyle? styles.textStyle: textStyle} />
+        <CustomText text={title} textStyle={[!textStyle? styles.textStyle: textStyle]} />
       </View>
     </TouchableOpacity>
   );
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   mainStyle: {
     width: '100%',
     height: 60,
-    backgroundColor: Colors.mustard,
+    backgroundColor: Colors.red,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,

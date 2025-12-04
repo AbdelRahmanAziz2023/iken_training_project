@@ -33,7 +33,7 @@ const OrderDetailsScreen = () => {
   // keep orders in local state so participant can "leave" in demo
   const [ordersState, setOrdersState] = useState(dummyOrders);
   const [deliveryFee, setDeliveryFee] = useState(0);
-  const [paymentInstapay, setPaymentInstapay] = useState('');
+  const [paymentInstapay, setPaymentInstapay] = useState("");
 
   const isLocked = status === "locked";
   const isOpened = status === "opened";
@@ -47,6 +47,7 @@ const OrderDetailsScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
+        {/* Order header */}
         <OrderHeader status={status} />
 
         {/* members row */}
@@ -57,18 +58,36 @@ const OrderDetailsScreen = () => {
           membersCount={ordersState.length}
         />
 
+        {/* Order list of participants */}
         <OrderList
           orders={ordersState}
           {...({ isOpened, isLocked, isCreator } as any)}
         />
-        {isLocked && isCreator && <DeliveryPaymentSection setDeliveryFee={setDeliveryFee} setPaymentInstapay={setPaymentInstapay} />}
-        <OrderTotals deliveryFee={deliveryFee} subtotal={subtotal} />
-        {!isCreator && (
-          <CustomHint
-            message={isOpened ? "Waiting for Host to lock order..." : "Host is finalizing the order..."}
+
+        {/* Inputs for Host when lock */}
+        {isLocked && isCreator && (
+          <DeliveryPaymentSection
+            deliveryFee={deliveryFee}
+            setDeliveryFee={setDeliveryFee}
+            setPaymentInstapay={setPaymentInstapay}
           />
         )}
-        {/* host inputs when locked */}
+
+        {/* Order total fee */}
+        <OrderTotals deliveryFee={deliveryFee} subtotal={subtotal} />
+
+        {/* Hint to participant */}
+        {!isCreator && (
+          <CustomHint
+            message={
+              isOpened
+                ? "Waiting for Host to lock order..."
+                : "Host is finalizing the order..."
+            }
+          />
+        )}
+
+        {/* Actoins Buttons */}
         <OrderActions
           isOpened={isOpened}
           isLocked={isLocked}
@@ -104,7 +123,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#F1F5F9",
   },
-  /* membersRow styles moved to `MembersRow.tsx` */
 });
 
 export default OrderDetailsScreen;

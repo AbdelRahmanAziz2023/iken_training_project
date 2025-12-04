@@ -1,79 +1,101 @@
-import * as SecureStore from 'expo-secure-store';
+// src/store/expo-secure-store.ts
+import * as SecureStore from "expo-secure-store";
 
-const TOKEN_KEY = 'auth_token';
-const USER_KEY = 'user_data';
+const TOKEN_KEY = "auth_token";
+const USER_KEY = "user_data";
+const REFRESH_TOKEN_KEY = "refresh_token";
 
-// Save token
 export const saveToken = async (token: string): Promise<void> => {
   try {
     await SecureStore.setItemAsync(TOKEN_KEY, token);
   } catch (error) {
-    console.error('Error saving token:', error);
+    console.error("Error saving token:", error);
     throw error;
   }
 };
 
-// Get token
 export const getToken = async (): Promise<string | null> => {
   try {
     return await SecureStore.getItemAsync(TOKEN_KEY);
   } catch (error) {
-    console.error('Error getting token:', error);
+    console.error("Error getting token:", error);
     return null;
   }
 };
 
-// Remove token
 export const removeToken = async (): Promise<void> => {
   try {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
   } catch (error) {
-    console.error('Error removing token:', error);
+    console.error("Error removing token:", error);
     throw error;
   }
 };
 
-// Save user data
+export const saveRefreshToken = async (token: string): Promise<void> => {
+  try {
+    await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, token);
+  } catch (error) {
+    console.error("Error saving refresh token:", error);
+    throw error;
+  }
+};
+
+export const getRefreshToken = async (): Promise<string | null> => {
+  try {
+    return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+  } catch (error) {
+    console.error("Error getting refresh token:", error);
+    return null;
+  }
+};
+
+export const removeRefreshToken = async (): Promise<void> => {
+  try {
+    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+  } catch (error) {
+    console.error("Error removing refresh token:", error);
+    throw error;
+  }
+};
+
 export const saveUser = async (user: object): Promise<void> => {
   try {
     await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.error("Error saving user:", error);
     throw error;
   }
 };
 
-// Get user data
 export const getUser = async (): Promise<object | null> => {
   try {
     const userData = await SecureStore.getItemAsync(USER_KEY);
     return userData ? JSON.parse(userData) : null;
   } catch (error) {
-    console.error('Error getting user:', error);
+    console.error("Error getting user:", error);
     return null;
   }
 };
 
-// Remove user data
 export const removeUser = async (): Promise<void> => {
   try {
     await SecureStore.deleteItemAsync(USER_KEY);
   } catch (error) {
-    console.error('Error removing user:', error);
+    console.error("Error removing user:", error);
     throw error;
   }
 };
 
-// Clear all auth data
 export const clearAuth = async (): Promise<void> => {
   try {
     await Promise.all([
       SecureStore.deleteItemAsync(TOKEN_KEY),
+      SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY),
       SecureStore.deleteItemAsync(USER_KEY),
     ]);
   } catch (error) {
-    console.error('Error clearing auth data:', error);
+    console.error("Error clearing auth data:", error);
     throw error;
   }
 };
-

@@ -1,28 +1,25 @@
 import CustomText from "@/src/components/common/CustomText";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 
 type Props = {
+  deliveryFee: number;
   setDeliveryFee: (v: number) => void;
   setPaymentInstapay: (v: string) => void;
   membersCount?: number;
 };
 
 const DeliveryPaymentSection = ({
+  deliveryFee,
   setDeliveryFee,
   setPaymentInstapay,
   membersCount = 3,
 }: Props) => {
-
-  const [delivery, setDelivery] = useState(0);
-
   const perPerson =
-    membersCount > 0 ? (delivery / membersCount).toFixed(2) : "0.00";
+    membersCount > 0 ? (deliveryFee / membersCount).toFixed(2) : "0.00";
 
   const onDeliveryChange = (v: string) => {
-    const num = Number(v) || 0;
-    setDelivery(num);
-    setDeliveryFee(num);
+    setDeliveryFee(Number(v));
   };
 
   return (
@@ -42,7 +39,7 @@ const DeliveryPaymentSection = ({
               placeholder="0"
               onChangeText={onDeliveryChange}
               style={styles.numberInput}
-              value={delivery === 0 ? "" : String(delivery)}
+              value={deliveryFee === 0 ? "" : String(deliveryFee)}
             />
           </View>
         </View>
@@ -83,7 +80,6 @@ const DeliveryPaymentSection = ({
 
 export default DeliveryPaymentSection;
 
-
 const styles = StyleSheet.create({
   container: {
     marginTop: 12,
@@ -106,12 +102,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  /** Global input wrapper */
   inputGroup: {
     justifyContent: "center",
   },
 
-  /** Tag before number input */
   leftTag: {
     position: "absolute",
     left: 12,

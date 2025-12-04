@@ -81,8 +81,7 @@ const PaymentList = ({ calculateTotal, participants, skipInitialHostAutoPaid }: 
       const isCurrentlyPaid = !!toggles[id];
 
       try {
-        // await mutation and unwrap to throw on error
-        await togglePaid({ userId: id, isPaid: !isCurrentlyPaid }).unwrap();
+       // await togglePaid({ userId: id, isPaid: !isCurrentlyPaid }).unwrap();
 
         // Update total
         calculateTotal(isCurrentlyPaid ? -participant.amount : participant.amount);

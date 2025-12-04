@@ -6,7 +6,7 @@ export const getUserStatusStyle = (status: string) => {
         case "Participant":
             return { backgroundColor: Colors.gray100 ,color:Colors.gray400 ,fontFamily:"SenBold", borderColor:Colors.gray400 , };
         case "Host":
-            return { backgroundColor: "#c6dcffff" ,color:'#3b82f6' ,fontFamily:"SenBold", borderColor:'#3b82f6'  }; 
+            return { backgroundColor: "#d7e6ffff" ,color:'#6aa3ffff' ,fontFamily:"SenBold", borderColor:'#6aa3ffff'  }; 
         default:
             return { backgroundColor: "#EEE" };
     }

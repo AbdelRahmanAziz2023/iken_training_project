@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
 
   orderTotal: {
     color: "#444",
-    fontWeight: "500",
+    fontFamily: "SenBold",
     marginBottom: 4,
   },
 

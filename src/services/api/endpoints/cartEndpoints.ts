@@ -9,7 +9,7 @@ import {
   PreviewCartRequest,
   PreviewCartResponse,
 } from "../../../types/cart.type";
-import baseApi from "../baseApi";
+import { baseApi } from "../baseApi";
 
 interface JoinCartRequest {
   joinCode: string;

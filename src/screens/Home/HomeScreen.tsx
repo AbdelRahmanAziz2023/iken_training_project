@@ -1,6 +1,8 @@
 import CustomError from "@/src/components/common/CustomError";
 import ActiveCartSkeleton from "@/src/components/skeleton/ActiveCartSkeleton";
 import { Colors } from "@/src/constants/colors";
+
+import CustomEnvBanner from "@/src/components/common/CustomEnvBanner";
 import { useGetActiveCartQuery } from "@/src/services/api/endpoints/cartEndpoints";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -31,6 +33,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.content}>
+        <CustomEnvBanner />
         <PasscodePopup
           isVisible={isVisible}
           onClose={() => setIsVisible(false)}
